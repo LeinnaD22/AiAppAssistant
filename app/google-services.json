@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436689582288",
+    "project_id": "crucial-zodiac-385623",
+    "storage_bucket": "crucial-zodiac-385623.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436689582288:android:c9e92067536747d29706d5",
+        "android_client_info": {
+          "package_name": "com.ai.assistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLi66VZ8Hce048z9nKg8xhTsLD4jYURY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
