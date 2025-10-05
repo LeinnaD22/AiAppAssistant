@@ -22,12 +22,14 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.ai.FirebaseAI;
 import com.google.firebase.ai.GenerativeModel;
+import com.google.firebase.ai.java.ChatFutures;
 import com.google.firebase.ai.java.GenerativeModelFutures;
 import com.google.firebase.ai.type.Content;
 import com.google.firebase.ai.type.GenerateContentResponse;
 import com.google.firebase.ai.type.GenerativeBackend;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -36,7 +38,6 @@ public class fragment_home extends Fragment {
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Message> messages;
-    private Executor mainExecutor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +56,19 @@ public class fragment_home extends Fragment {
 
         TextInputEditText userText = view.findViewById(R.id.userText);
         Button button = view.findViewById(R.id.sendButton);
+
+        Content.Builder userContentBuilder = new Content.Builder();
+        userContentBuilder.setRole("user");
+        userContentBuilder.addText("Hello, I am a user looking for help");
+        Content userContent = userContentBuilder.build();
+
+        Content.Builder modelContentBuilder = new Content.Builder();
+        modelContentBuilder.setRole("model");
+        modelContentBuilder.addText("Great to meet you. What would you like to know?");
+        Content modelContent = modelContentBuilder.build();
+
+        List<Content> history = Arrays.asList(userContent, modelContent);
+        ChatFutures chat = model.startChat(history);
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -63,21 +77,22 @@ public class fragment_home extends Fragment {
                 String userString = userText.getText().toString();
                 userText.setText("");
                 userText.clearFocus();
-                messages.add(new Message("Me", userString, System.currentTimeMillis(), true));
+                messages.add(new Message("user", userString, System.currentTimeMillis(), true));
                 messageAdapter.notifyItemInserted(messages.size() - 1);
-                Content prompt = new Content.Builder()
-                        .addText(userString)
-                        .build();
-                generateText(prompt, model, new ResponseCallback() {
+                Content.Builder messageBuilder = new Content.Builder()
+                        .setRole("user")
+                        .addText(userString);
+                Content message = messageBuilder.build();
+                startChat(message, chat, new ResponseCallback() {
                     @Override
                     public void onSuccess(String text) {
-                        messages.add(new Message("Gemini", text, System.currentTimeMillis(), false));
+                        messages.add(new Message("model", text, System.currentTimeMillis(), false));
                         messageAdapter.notifyItemInserted(messages.size() - 1);
                     }
 
                     @Override
                     public void onFailure(String error) {
-                        messages.add(new Message("Gemini", error, System.currentTimeMillis(), false));
+                        messages.add(new Message("mdoel", error, System.currentTimeMillis(), false));
                         messageAdapter.notifyItemInserted(messages.size() - 1);
                     }
                 });
@@ -85,6 +100,24 @@ public class fragment_home extends Fragment {
         });
 
         return view;
+    }
+
+    public void startChat(Content message, ChatFutures chat, ResponseCallback callback) {
+        ListenableFuture<GenerateContentResponse> response = chat.sendMessage(message);
+        Executor executor = ContextCompat.getMainExecutor(requireContext());
+        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String resultText = result.getText();
+                callback.onSuccess(resultText);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                callback.onFailure(t.getMessage());
+            }
+        }, executor);
     }
 
     public void generateText(Content prompt, GenerativeModelFutures model, ResponseCallback callback) {
