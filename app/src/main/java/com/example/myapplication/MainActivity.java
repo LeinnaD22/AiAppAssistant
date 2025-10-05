@@ -33,6 +33,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -78,16 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
 // (optional) Create previous chat history for context
         Content.Builder userContentBuilder = new Content.Builder();
-        userContentBuilder.setRole("user");
-        userContentBuilder.addText("Hello, I have 2 dogs in my house.");
-        Content userContent = userContentBuilder.build();
+
 
         Content.Builder modelContentBuilder = new Content.Builder();
         modelContentBuilder.setRole("model");
         modelContentBuilder.addText("Great to meet you. What would you like to know?");
         Content modelContent = userContentBuilder.build();
 
-        List<Content> history = Arrays.asList(userContent, modelContent);
+        List<Content> history = Arrays.asList(modelContent);
 
 // Initialize the chat
         ChatFutures chat = model.startChat(history);
@@ -103,20 +105,27 @@ public class MainActivity extends AppCompatActivity {
                 Content.Builder messageBuilder = new Content.Builder();
                 messageBuilder.setRole("user");
                 messageBuilder.addText(enteredValue);
-                messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
+                messageAdapter.userInsert(enteredValue, messages.size());
+                System.out.println(enteredValue);
+                System.out.println(messages.size());
+                //messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
                 myText.setText("");
 
                 Content message = messageBuilder.build();
 
 // Send the message
                 ListenableFuture<GenerateContentResponse> response = chat.sendMessage(message);
-                Executor executor = null;
+
+                ExecutorService executor = Executors.newFixedThreadPool(5);
                 Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
                     @Override
                     public void onSuccess(GenerateContentResponse result) {
                         String resultText = result.getText();
-                        messages.add(new Message("Gemini", resultText, System.currentTimeMillis(), false));
+                        //messages.add(new Message("Gemini", resultText, System.currentTimeMillis(), false));
+                        messageAdapter.aiInsert(resultText, messages.size());
+                        System.out.println(messages.size());
                         System.out.println(resultText);
+
                     }
 
                     @Override
