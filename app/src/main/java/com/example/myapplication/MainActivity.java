@@ -110,8 +110,17 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(messages.size());
                 //messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
                 myText.setText("");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Update UI elements here
+                        messageAdapter.notifyItemInserted(messages.size()-1);
+                        recyclerView.scrollToPosition(messages.size()- 1);
+                    }
+                });
 
                 Content message = messageBuilder.build();
+
 
 // Send the message
                 ListenableFuture<GenerateContentResponse> response = chat.sendMessage(message);
@@ -125,6 +134,14 @@ public class MainActivity extends AppCompatActivity {
                         messageAdapter.aiInsert(resultText, messages.size());
                         System.out.println(messages.size());
                         System.out.println(resultText);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Update UI elements here
+                                messageAdapter.notifyItemInserted(messages.size()-1);
+                                recyclerView.scrollToPosition(messages.size()- 1);
+                            }
+                        });
 
                     }
 
@@ -135,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 }, executor);
             }
         });
+
 
 
     }

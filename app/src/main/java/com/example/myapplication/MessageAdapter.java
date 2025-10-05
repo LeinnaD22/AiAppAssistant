@@ -23,12 +23,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public void userInsert(String enteredValue, int positon){
         messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
-        notifyItemInserted(positon - 1);
+       // notifyItemInserted(positon - 1);
+
     }
 
     public void aiInsert(String resultText, int position){
         messages.add(new Message("Gemini", resultText, System.currentTimeMillis(), false));
-        notifyItemInserted(position - 1);
+        //notifyItemInserted(position - 1);
     }
     
 
