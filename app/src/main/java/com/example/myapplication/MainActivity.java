@@ -39,9 +39,9 @@ import java.util.concurrent.Executors;
 
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    /*private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
-    private List<Message> messages;
+    private List<Message> messages;*/
     private ActivityMainBinding binding;
 
     @Override
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        recyclerView = findViewById(R.id.myRecyclerView);
+       /* recyclerView = findViewById(R.id.myRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         messages = new ArrayList<>();
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, executor);
             }
-        });
+        });*/
 
 
 
