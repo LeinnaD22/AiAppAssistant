@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.recyclerview)
     implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation(libs.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -61,5 +62,6 @@ dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("org.reactivestreams:reactive-streams:1.0.4")
     implementation("androidx.concurrent:concurrent-futures:1.3.0")
+    implementation("com.google.android.material:material:1.3.0-alpha03")
 
 }
