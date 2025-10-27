@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -20,6 +21,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.messages = messages;
     }
 
+    public void userInsert(String enteredValue, int positon){
+        messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
+       // notifyItemInserted(positon - 1);
+
+    }
+
+    public void aiInsert(String resultText, int position){
+        messages.add(new Message("Gemini", resultText, System.currentTimeMillis(), false));
+        //notifyItemInserted(position - 1);
+    }
+    
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,7 +53,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.rightChatLayout.setVisibility(View.GONE);
             holder.leftChatTextView.setText(messages.get(position).getContent());
         }
+        
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,6 +71,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
             leftChatTextView = itemView.findViewById(R.id.left_chat_textview);
             rightChatTextView = itemView.findViewById(R.id.right_chat_textview);
+
         }
     }
 }

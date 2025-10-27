@@ -1,9 +1,6 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -12,32 +9,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.databinding.ActivityMainBinding;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.ai.FirebaseAI;
-import com.google.firebase.ai.GenerativeModel;
-import com.google.firebase.ai.java.ChatFutures;
-import com.google.firebase.ai.java.GenerativeModelFutures;
-import com.google.firebase.ai.type.Content;
-import com.google.firebase.ai.type.GenerateContentResponse;
-import com.google.firebase.ai.type.GenerativeBackend;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private MessageAdapter messageAdapter;
-    private List<Message> messages;
     private ActivityMainBinding binding;
 
     @Override
@@ -57,75 +34,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        recyclerView = findViewById(R.id.myRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        messages = new ArrayList<>();
-        // Add sample messages or load from a data source
-
-        messageAdapter = new MessageAdapter(messages);
-        recyclerView.setAdapter(messageAdapter);
-
-// Initialize the Gemini Developer API backend service
-// Create a `GenerativeModel` instance with a model that supports your use case
-        GenerativeModel ai = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.5-flash");
-
-// Use the GenerativeModelFutures Java compatibility layer which offers
-// support for ListenableFuture and Publisher APIs
-        GenerativeModelFutures model = GenerativeModelFutures.from(ai);
-
-
-// (optional) Create previous chat history for context
-        Content.Builder userContentBuilder = new Content.Builder();
-        userContentBuilder.setRole("user");
-        userContentBuilder.addText("Hello, I have 2 dogs in my house.");
-        Content userContent = userContentBuilder.build();
-
-        Content.Builder modelContentBuilder = new Content.Builder();
-        modelContentBuilder.setRole("model");
-        modelContentBuilder.addText("Great to meet you. What would you like to know?");
-        Content modelContent = userContentBuilder.build();
-
-        List<Content> history = Arrays.asList(userContent, modelContent);
-
-// Initialize the chat
-        ChatFutures chat = model.startChat(history);
-
-// Create a new user message
-        TextInputEditText myText = findViewById(R.id.textBox);
-        Button button= (Button) findViewById(R.id.sendButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Code to execute when the button is clicked
-                String enteredValue = myText.getText().toString();
-                Content.Builder messageBuilder = new Content.Builder();
-                messageBuilder.setRole("user");
-                messageBuilder.addText(enteredValue);
-                messages.add(new Message("Me", enteredValue, System.currentTimeMillis(), true));
-                myText.setText("");
-
-                Content message = messageBuilder.build();
-
-// Send the message
-                ListenableFuture<GenerateContentResponse> response = chat.sendMessage(message);
-                Executor executor = null;
-                Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
-                    @Override
-                    public void onSuccess(GenerateContentResponse result) {
-                        String resultText = result.getText();
-                        messages.add(new Message("Gemini", resultText, System.currentTimeMillis(), false));
-                        System.out.println(resultText);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        t.printStackTrace();
-                    }
-                }, executor);
-            }
-        });
 
 
     }
