@@ -11,6 +11,7 @@ public class Message {
         this.content = content;
         this.timestamp = timestamp;
         this.isMine = isMine;
+
     }
 
     // Getters for all properties

@@ -41,4 +41,14 @@
             android:textColor="@color/white"
             />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/typing_indicator"
+        android:layout_width="82dp"
+        android:layout_height="67dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/download"
+        android:backgroundTint="@color/gray"
+        android:orientation="vertical">
+    </LinearLayout>
+
 </RelativeLayout>

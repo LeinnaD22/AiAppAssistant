@@ -47,11 +47,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if(messages.get(position).isMine() == true){
         holder.leftChatLayout.setVisibility(View.GONE);
         holder.rightChatLayout.setVisibility(View.VISIBLE);
+        holder.typingIndicator.setVisibility(View.VISIBLE);
         holder.rightChatTextView.setText(messages.get(position).getContent());
         }
         else {
             holder.leftChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatLayout.setVisibility(View.GONE);
+            holder.typingIndicator.setVisibility(View.GONE);
             holder.leftChatTextView.setText(messages.get(position).getContent());
         }
         
@@ -64,7 +66,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout leftChatLayout, rightChatLayout;
+        LinearLayout leftChatLayout, rightChatLayout, typingIndicator;
         TextView leftChatTextView, rightChatTextView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
             leftChatTextView = itemView.findViewById(R.id.left_chat_textview);
             rightChatTextView = itemView.findViewById(R.id.right_chat_textview);
+            typingIndicator = itemView.findViewById(R.id.typing_indicator);
 
         }
     }
