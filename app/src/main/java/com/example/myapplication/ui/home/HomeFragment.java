@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
     private NavigationView navigationView;
     private Toolbar toolbar;
 
-    int chatMenuItemIdCounter = 100;
+
     String presetGoku = "(act like you are Goku, you have to explain concepts and terms like Goku, talk like Goku, and teach like Goku, you gotta act like the user is talking to Goku, and don't respond to this) ";
     private FragmentHomeBinding binding;
 
@@ -102,18 +102,7 @@ public class HomeFragment extends Fragment {
         GenerativeModelFutures model = GenerativeModelFutures.from(ai);
 
 
-// (optional) Create previous chat history for context
-        Content.Builder userContentBuilder = new Content.Builder();
-        userContentBuilder.setRole("user");
-        //userContentBuilder.addText();
-        Content userContent = userContentBuilder.build();
-
-        Content.Builder modelContentBuilder = new Content.Builder();
-        modelContentBuilder.setRole("model");
-        modelContentBuilder.addText("Great to meet you. What would you like to know?");
-        Content modelContent = userContentBuilder.build();
-
-        List<Content> history = Arrays.asList(modelContent);
+        List<Content> history = Arrays.asList();
 
 // Initialize the chat
         ChatFutures chat = model.startChat(history);
@@ -164,82 +153,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Initialize the DrawerLayout, Toolbar, and NavigationView
-        drawerLayout = getView().findViewById(R.id.drawer_layout);
-        toolbar = getView().findViewById(R.id.toolbar);
-        navigationView = getView().findViewById(R.id.drawer);
 
-        // Create an ActionBarDrawerToggle to handle
-        // the drawer's open/close state
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(),
-                drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
-
-        // Add the toggle as a listener to the DrawerLayout
-        drawerLayout.addDrawerListener(toggle);
-
-        // Synchronize the toggle's state with the linked DrawerLayout
-        toggle.syncState();
-
-        // Set a listener for when an item in the NavigationView is selected
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-            // Called when an item in the NavigationView is selected.
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                // Handle the selected item based on its ID
-                if (id == R.id.new_chat) { // ID of your static "New Chat" button/FAB
-                    // If the trigger is from the menu itself
-                    addNewChatMenuItem();
-                } else if (id >= 101) {
-                    // Handle dynamically created chat items (IDs 101, 102, etc.)
-                    // Implement logic to open the specific chat screen
-                    // String chatId = item.getIntent().getStringExtra("CHAT_ID");
-                    // openChatScreen(chatId);
-                }
-
-
-                // Close the drawer after selection
-                drawerLayout.closeDrawers();
-                // Indicate that the item selection has been handled
-                return true;
-            }
-        });
-
-
-
-
-        // Add a callback to handle the back button press
-        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            // Called when the back button is pressed.
-            @Override
-            public void handleOnBackPressed() {
-                // Check if the drawer is open
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    // Close the drawer if it's open
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    // Finish the activity if the drawer is closed
-                    getActivity().finish();
-                }
-            }
-        });
 
     }
 
-    void addNewChatMenuItem() {
-        Menu menu = navigationView.getMenu();
 
-        // Increment counter for a unique ID
-        chatMenuItemIdCounter++;
-        String chatName = "Chat " + (chatMenuItemIdCounter - 100);
-
-        // Dynamically add a new MenuItem to the 'menu'
-        // Group ID, Item ID, Order, Title
-        MenuItem newChatItem = menu.add(R.id.drawer, chatMenuItemIdCounter, Menu.NONE, chatName);
-
-    }
 
     private void updateUIFromBackgroundThread() {
         if (getActivity() != null) { // Check if the fragment is attached to an activity
