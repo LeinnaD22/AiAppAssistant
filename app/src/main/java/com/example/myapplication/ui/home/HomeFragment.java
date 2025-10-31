@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -180,6 +181,7 @@ public class HomeFragment extends Fragment {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Handle the selected item based on its ID
                 if (item.getItemId() == R.id.new_chat) {
+
 
 
                 }

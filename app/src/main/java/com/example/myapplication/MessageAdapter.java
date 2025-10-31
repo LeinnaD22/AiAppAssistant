@@ -10,15 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     Context context;
-    List<Message> messages;
+    ArrayList<Message> messages;
     public MessageAdapter(List<Message> messages){
         this.context = context;
-        this.messages = messages;
+        this.messages = (ArrayList<Message>) messages;
     }
 
     public void userInsert(String enteredValue, int positon){
